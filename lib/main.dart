@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:keep_note/screens/home_scree.dart';
+import 'package:keep_note/screens/home_screen.dart';
 
 void main(){
   runApp(const KeepNoteApp());
