@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:keep_note/models/note_model.dart';
 import 'package:keep_note/screens/home_screen.dart';
+import 'package:keep_note/services/database_helper.dart';
 
 class NoteScreen extends StatefulWidget {
-  const NoteScreen({super.key});
+  final NoteModel? note;
+
+  const NoteScreen({this.note, super.key});
 
   @override
   State<StatefulWidget> createState() => _NoteScreen();
@@ -11,6 +15,14 @@ class NoteScreen extends StatefulWidget {
 class _NoteScreen extends State<NoteScreen> {
   @override
   Widget build(BuildContext context) {
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
+
+    if(widget.note != null){
+      titleController.text = widget.note!.title;
+      descriptionController.text = widget.note!.description;
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -24,9 +36,9 @@ class _NoteScreen extends State<NoteScreen> {
             color: Colors.white,
           ),
         ),
-        title: const Text(
-          'Add Note',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          widget.note == null ? "Add Note" : "Edit Note",
+          style: const TextStyle(color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -39,8 +51,9 @@ class _NoteScreen extends State<NoteScreen> {
             children: [
               Column(
                 children: [
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
                       label: Text('Title'),
                       border: OutlineInputBorder(),
                     ),
@@ -50,9 +63,10 @@ class _NoteScreen extends State<NoteScreen> {
                   ),
                   Container(
                     color: Colors.white,
-                    child: const TextField(
+                    child: TextField(
+                      controller: descriptionController,
                       maxLines: null,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         label: Text('Description'),
                         border: OutlineInputBorder(),
                       ),
@@ -69,11 +83,27 @@ class _NoteScreen extends State<NoteScreen> {
                 color: Colors.transparent,
                 child: ElevatedButton(
                   onPressed: () {
+                    if (titleController.text.isEmpty ||
+                        descriptionController.text.isEmpty) {
+                      return;
+                    }
+
+                    final NoteModel note = NoteModel(
+                        title: titleController.text,
+                        description: descriptionController.text, id: widget.note?.id);
+
+                    if (widget.note == null) {
+                      DatabaseHelper.addNote(note);
+                    } else {
+                      DatabaseHelper.updateNote(note);
+                    }
                     Navigator.of(context).pop();
                     Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
@@ -82,7 +112,7 @@ class _NoteScreen extends State<NoteScreen> {
                       borderRadius: BorderRadius.circular(6.0),
                     ),
                   ),
-                  child: const Text('Add/ Update'),
+                  child: Text(widget.note == null ? "Add" : "Update"),
                 ),
               ),
             ],

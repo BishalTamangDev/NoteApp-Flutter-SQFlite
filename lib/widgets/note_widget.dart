@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:keep_note/models/note_model.dart';
 import 'package:keep_note/screens/note_screen.dart';
 
 class NoteWidget extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onLongPress;
+  final NoteModel note;
 
-  const NoteWidget({required this.onTap,required this.onLongPress, super.key});
+  const NoteWidget(
+      {required this.note,
+      required this.onTap,
+      required this.onLongPress,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +28,10 @@ class NoteWidget extends StatelessWidget {
                 width: double.infinity,
                 color: Colors.transparent,
                 margin: const EdgeInsets.only(bottom: 5.0),
-                child: const Text(
-                  'Title',
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                child: Text(
+                  note.title,
+                  style: const TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
@@ -36,11 +43,11 @@ class NoteWidget extends StatelessWidget {
                 width: double.infinity,
                 color: Colors.transparent,
                 margin: const EdgeInsets.only(top: 5.0),
-                child: const Text(
-                    'It was easy to spot her. All you needed to do was look at her socks. They were never a matching pair. One would be green while the other would be blue. One would reach her knee while the other barely touched her ankle. Every other part of her was perfect, but never the socks. They were her micro act of rebellion.',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                    ),
+                child: Text(
+                  note.description,
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                  ),
                 ),
               ),
             ],
