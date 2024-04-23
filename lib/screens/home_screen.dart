@@ -31,7 +31,36 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 10,
             itemBuilder: (context, index) {
-              return const NoteWidget();
+              return NoteWidget(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NoteScreen()));
+                },
+                onLongPress: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Delete this note?'),
+                          content: const Text('You won\'t be able to retrieve this later.'),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  print('Note deletion proceed.');
+                                  Navigator.of(context).pop();
+                                }, child: const Text('Yes')),
+                            TextButton(
+                                onPressed: () {
+                                  print('Note deletion abort.');
+                                  Navigator.of(context).pop();
+                                }, child: const Text('No')),
+                          ],
+                        );
+                      });
+                },
+              );
             },
           ),
         ),
@@ -40,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         onPressed: () {
           //   navigate to another screen -> Add Note Screen
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> const NoteScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const NoteScreen()));
         },
         child: const Icon(
           Icons.add,

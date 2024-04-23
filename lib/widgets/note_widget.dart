@@ -2,41 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:keep_note/screens/note_screen.dart';
 
 class NoteWidget extends StatelessWidget {
-  const NoteWidget({super.key});
+  final VoidCallback onTap;
+  final VoidCallback onLongPress;
+
+  const NoteWidget({required this.onTap,required this.onLongPress, super.key});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const NoteScreen()));
-      },
-      onLongPress: () {
-        // print('Long pressed');
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: const Text('Delete this note?'),
-                  content: const Text(
-                      'Delete this note? You won\'t be able to recover this note.'),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          print("Note deletion proceed");
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Yes')),
-                    TextButton(
-                        onPressed: () {
-                          print("Note deletion abort");
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('No')),
-                  ],
-                ));
-      },
+      onTap: onTap,
+      onLongPress: onLongPress,
       child: Card(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: Padding(
